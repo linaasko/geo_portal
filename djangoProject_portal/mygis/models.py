@@ -6,5 +6,5 @@ class Articles(models.Model):
     title = models.CharField(max_length=200)
     text = models.TextField()
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-
-# Create your models here.
+    def __str__(self):
+        return self.title
