@@ -17,3 +17,6 @@ def home(request):
 def show_articles(request, article_id):
     article = get_object_or_404(Articles, id=article_id)
     return render(request, 'mygis/article.html', {'article': article})
+
+def about(request):
+    return render(request, 'mygis/about.html')
