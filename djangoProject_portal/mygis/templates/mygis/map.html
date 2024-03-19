@@ -3,9 +3,57 @@
 {% block title %}
     Map
 {% endblock %}
+{% block my_map %}
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <style>
+    html,
+    body,
+    #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 500px;
+      width: 100%;
+    }
+  </style>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css" />
+  <script src="https://js.arcgis.com/4.29/"></script>
+  <script>
+     require(["esri/config", "esri/Map", "esri/views/MapView", "esri/widgets/Locate", "esri/widgets/Sketch", "esri/layers/GraphicsLayer"], function(esriConfig, Map, MapView, Locate, Sketch, GraphicsLayer) {
 
+        esriConfig.apiKey = "YOUR_API_KEY";
+        const graphicsLayer = new GraphicsLayer();
+        const map = new Map({
+          basemap: "hybrid" // basemap styles service
+        });
+
+        const view = new MapView({
+          map: map,
+          center: [30.600, 50.480], // Longitude, latitude
+          zoom: 10.5, // Zoom level
+          container: "viewDiv" // Div element
+        });
+        const locate = new Locate({
+          view: view,
+          useHeadingEnabled: false,
+          goToOverride: function(view, options) {
+            options.target.scale = 1500;
+            return view.goTo(options.target);
+          }
+        });
+        view.ui.add(locate, "bottom-left");
+        view.when(() => {
+        const sketch = new Sketch({
+          layer: graphicsLayer,
+          view: view,
+          // graphic will be selected as soon as it is created
+          creationMode: "update"
+        });
+
+        view.ui.add(sketch, "top-right");
+      });
+    });
+  </script>
+{% endblock %}
 {% block content %}
-    <h2>Map development</h2>
-    <p class="color_dev">Creator: <span>Lina Kokosha</span></p>
-    <p>@2024 All rights reserved</p>
+    <div id="viewDiv"></div>
 {% endblock %}
